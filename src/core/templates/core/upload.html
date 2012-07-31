@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <form enctype="multipart/form-data" method="post" action="/nfe">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <input type="submit" value="Enviar!" class="button">
+    </form>
+
+{% endblock content %}
+
+
