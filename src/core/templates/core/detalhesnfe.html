@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <h1>{{ msgError }}</h1>
     Emitente: {{ nfe.emitente.razaoSocial }}<br>
     Numero: {{ nfe.dadosNfe.numero }} / Serie: {{ nfe.dadosNfe.serie }}<br>
     Data: {{ nfe.dadosNfe.dataEmissao }}<br>

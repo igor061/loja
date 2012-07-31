@@ -32,6 +32,7 @@ def handle_uploaded_file(request):
 
             totalVenda = 0
 
+
             for p in prodDict:
                 p['custo'] = p['valor'] + p['frete'] + p['seguro'] + p['ipi'] - p['desconto']
                 p['preco'] = p['custo'] * markup / p['qtd']
@@ -39,9 +40,20 @@ def handle_uploaded_file(request):
 
 
             tableProd = NFe2ProdutoTable(prodDict)
-            print "mapNfe2 =", mapNfe2
 
-            return render(request, 'core/detalhesnfe.html', {'table': tableProd, 'nfe': mapNfe2, 'totalVenda': totalVenda})
+            markupReal = (totalVenda / mapNfe2['valores']['total'])
+            if abs(markupReal - markup) > 0.005:
+                msgError = "Atenção o markup sobre o preço de custo esta diferente!!!! O markup está %.3f e foi pedido %.3f" %(
+                    markupReal, markup
+                )
+            else:
+                msgError = ""
+
+            return render(request, 'core/detalhesnfe.html', {
+                        'table': tableProd,
+                        'nfe': mapNfe2,
+                        'totalVenda': totalVenda,
+                        'msgError': msgError})
         else:
             return direct_to_template(request, 'core/upload.html', {'form': form})
     else:
