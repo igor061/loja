@@ -11,6 +11,7 @@ class ParseNFeHtml(HTMLParser):
         HTMLParser.__init__(self)
         self.fifo = deque()
         self.mapNfe = dict()
+        self.mapNFeValidado = dict()
 
     def doParser(self, buf):
         self.fifo = deque()
@@ -19,10 +20,11 @@ class ParseNFeHtml(HTMLParser):
         #printFIFO(self.fifo)
         # Trata os dados e gera um Map com as chaves a partir do html
         mapHtml = self._geraMap()
-        printAll(mapHtml)
+        #printAll(mapHtml)
 
         # gera um map no padrao da classe NFe2
-        return self._nfeHtml2nfe(mapHtml)
+        self.mapNFeValidado = self._nfeHtml2nfe(mapHtml)
+        return self.mapNFeValidado
 
 
     def handle_starttag(self, tag, attrs):
@@ -264,6 +266,12 @@ class ParseNFeHtml(HTMLParser):
             pd['seguro'] = convertStrToFloat(prod.get('Valor do Seguro'))
             pd['codigoEAN'] = prod['C\xf3digo EAN Comercial']
 
+            mapIPI = prod.get('IMPOSTO SOBRE PRODUTOS INDUSTRIALIZADOS')
+            if mapIPI:
+                ipi = convertStrToFloat(mapIPI.get('Valor IPI'))
+
+            pd['ipi'] = ipi
+
 
 
         return tuple(produtos)
@@ -285,7 +293,7 @@ class NFe2:
         self.situacao = mapDadosNfe['situacao']
         self.valores = ValoresNFe2(mapNfe['valores'])
 
-        if abs(self.valores.total - self.produtos.valorTotalCusto()) > 0.0001:
+        if abs(self.valores.total - self.produtos.valorTotalCusto()) > 0.02:
             printAll(self)
             raise NFe2Exception("Valor da Nota [%.2f] difere do somatorio de custo dos produtos [%.2f]" %
                                 (self.valores.total, self.produtos.valorTotalCusto()))
@@ -348,6 +356,7 @@ class ProdutoNFe2:
         self.seguro = map['seguro']
         self.desconto = map['desconto']
         self.valorUnitario = map['valorUnitario']
+        self.ipi = map['ipi']
 
         self.codigo = map['codigo']
         self.id = map['id']
@@ -355,7 +364,7 @@ class ProdutoNFe2:
 
 
     def custo(self):
-        return self.valor + self.frete + self.seguro - self.desconto
+        return self.valor + self.frete + self.seguro + self.ipi - self.desconto
 
 
 
@@ -414,13 +423,13 @@ def printPrecoVenda(nfe2, markup):
         print "%6.2f - %2d - %s - %s" % (prod.custo()*markup/prod.qtd, prod.qtd, prod.codigo, prod.descricao)
 
 if __name__ == "__main__":
-    f = open('../../download/NFe Orient 136704.html')
+    #f = open('../../download/NFe Orient 136704.html')
     #f = open('../../download/NFe Technos 249946.html')
     #f = open('../../download/NFe Orient 136703.html')
     #f = open('../../download/NFe Seculus 190377.html')
     #f = open('../../download/NFe Seculus 191501.html')
     #f = open('../../download/NFe CPL 3100.html')
-
+    f = open('Armani 22559.html')
     buf = f.read()
 
     parser = ParseNFeHtml()

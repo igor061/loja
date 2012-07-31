@@ -3,3 +3,4 @@ Unipath==0.2.1
 psycopg2
 dj-database-url==0.2.0
 mock==0.8.0
+django_tables2

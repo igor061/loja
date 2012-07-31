@@ -2,7 +2,16 @@
 
 {% block content %}
 
-    <form enctype="multipart/form-data" method="post" action="/nfe">
+    <p>Entre no site da <a target="_blank" href="http://www.nfe.fazenda.gov.br/portal/consulta.aspx?tipoConsulta=completa&tipoConteudo=XbSeqxE8pl8=">receita</a></p>
+    <p>Digite a chave de acesso</p>
+    <p>Digite o codigo da image</p>
+    <p>Clicque em continuar</p>
+    <p>No fim da pagina que abrir clique em "preparar documento para impressao"</p>
+    <p>Salve a página que abrir em um diretorio que vc lembre e com um nome que vc lembre (CTRL+S)</p>
+    <p>Em markup preencha com o multiplicador que será aplicado ao preço de custo</p>
+    <p>Em aquivo indique o arquivo que vc salvou</p>
+
+    <form enctype="multipart/form-data" method="post" action="/nfeshow">
         {% csrf_token %}
         {{ form.as_p }}
 

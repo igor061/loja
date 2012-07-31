@@ -17,4 +17,5 @@ urlpatterns = patterns('src',
 
     url(r'^$', 'core.views.index', name='index'),
     url(r'^nfe$', 'core.views.nfe_upload', name='nfe_upload'),
+    url(r'^nfeshow$', 'core.views.handle_uploaded_file', name='nfe_show'),
 )

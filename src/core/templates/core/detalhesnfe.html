@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
- {{ nfe.numero }}
+    Emitente: {{ nfe.emitente.razaoSocial }}<br>
+    Numero: {{ nfe.dadosNfe.numero }} / Serie: {{ nfe.dados.serie }}<br>
+    Data: {{ nfe.dadosNfe.dataEmissao }}<br>
+    Sistuacao: {{ nfe.dadosNfe.situacao }}<br>
+    <br>
+    Loja: {{ nfe.destinatario.razaoSocial }}<br>
+    Chave: {{ nfe.dadosNfe.chaveDeAcesso }}<br>
+    Total Venda: {{ totalVenda }}<br>
+    <br>
+    {% load render_table from django_tables2 %}
+    {% render_table table %}
 {% endblock content %}
