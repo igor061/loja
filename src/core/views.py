@@ -35,7 +35,7 @@ def handle_uploaded_file(request):
 
             for p in prodDict:
                 p['custo'] = p['valor'] + p['frete'] + p['seguro'] + p['ipi'] - p['desconto']
-                p['preco'] = p['custo'] * markup / p['qtd']
+                p['preco'] = p['valor'] * markup / p['qtd']
                 totalVenda += p['preco'] * p['qtd']
 
 
